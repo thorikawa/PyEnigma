@@ -23,14 +23,18 @@ def main():
 	plugboard = Plugboard('')
 	rotors = [rotor1, rotor2, rotor3]
 	enigma = Enigma(rotors, reflector, plugboard)
-	print enigma.encodeString('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+	enigma.setWindowCharacters('ZRC')
+	print enigma.encodeString('WETTERVORHERSAGEBISKAYA')
 
 class Enigma:
 	def __init__(self, rotors, reflector, plugboard):
 		self.rotors = rotors
 		self.reflector = reflector
 		self.plugboard = plugboard
-		pass
+
+	def setWindowCharacters(self, windowCharacters):
+		for i in range(len(self.rotors)):
+			self.rotors[i].setWindowCharacter(windowCharacters[i])
 
 	def step(self):
 		turnover = True
@@ -65,7 +69,7 @@ class Rotor:
 		self.notch = ord(notch) - ord('A')
 		self.window = 0
 
-	def setWindow(windowCharacter):
+	def setWindowCharacter(self, windowCharacter):
 		self.window = ord(windowCharacter) - ord('A')
 
 	def step(self):
@@ -79,16 +83,14 @@ class Rotor:
 
 		wire_start = shift(shift(inputValue, -self.ring), self.window)
 		wire_end = ord(self.wiring[wire_start]) - ord('A')
-		outputWindowValue = shift(wire_end, self.ring)
-		outputValue = shift(outputWindowValue, - self.window)
+		outputValue = shift(shift(wire_end, self.ring), -self.window)
 		output = chr(outputValue + ord('A'))
 		return output
 
 	def backward(self, input):
 		inputValue = ord(input) - ord('A')
 
-		inputWindowValue = shift(inputValue, self.window)
-		wire_start = shift(inputWindowValue, -self.ring)
+		wire_start = shift(shift(inputValue, self.window), -self.ring)
 		for i in range(0, 26):
 			if ord(self.wiring[i]) - ord('A') == wire_start:
 				wire_end = i
