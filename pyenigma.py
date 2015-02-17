@@ -75,8 +75,7 @@ class Rotor:
 	def step(self):
 		turnover = (self.window == self.notch)
 		self.window = shift(self.window, 1)
-		# return turnover
-		return False
+		return turnover
 
 	def forward(self, input):
 		inputValue = ord(input) - ord('A')
