@@ -8,17 +8,14 @@ from unionfind import UnionFind
 ROTORS = [pyenigma.ROTOR1, pyenigma.ROTOR2, pyenigma.ROTOR3]
 plugboard = pyenigma.Plugboard('')
 
-def big2(num_list):
-	if len(num_list) > 2:
-		return [num_list[0], num_list[2]]
-	else:
-		return [num_list[0]]
-
 for order in permutations(range(3)):
 	print order
 	rotors = [ROTORS[order[0]], ROTORS[order[1]], ROTORS[order[2]]]
 	enigma = pyenigma.Enigma(rotors, pyenigma.REFLECTOR, plugboard)
 	for ground in product(string.ascii_uppercase, repeat=3):
+		# groundstr = ''.join(ground)
+		# if groundstr != 'FUQ':
+		# 	continue
 		uf1 = UnionFind(list(string.ascii_uppercase))
 		uf2 = UnionFind(list(string.ascii_uppercase))
 		uf3 = UnionFind(list(string.ascii_uppercase))
@@ -31,6 +28,9 @@ for order in permutations(range(3)):
 			uf1.union(indices[0], indices[3])
 			uf2.union(indices[1], indices[4])
 			uf3.union(indices[2], indices[5])
+		# print uf1.dump()
+		# print uf2.dump()
+		# print uf3.dump()
 		counts1 = uf1.counts()
 		counts2 = uf2.counts()
 		counts3 = uf3.counts()

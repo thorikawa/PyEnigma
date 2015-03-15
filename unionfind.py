@@ -12,9 +12,11 @@ class UnionFind:
 			self.parent[root1] = root2
 
 	def find(self, i):
-		while self.parent[i] >= 0:
-			i = self.parent[i]
-		return i
+		if self.parent[i] < 0:
+			return i
+		else:
+			self.parent[i] = self.find(self.parent[i])
+			return self.parent[i]
 
 	def roots(self):
 		result = []
