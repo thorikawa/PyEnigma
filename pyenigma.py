@@ -22,6 +22,10 @@ class Enigma:
 		self.reflector = reflector
 		self.plugboard = plugboard
 
+	def __str__(self):
+		rotors_str = ', '.join([str(r) for r in self.rotors])
+		return "{\nturnover=%s\rrotors=%s\nplugboard=%s\nreflector=%s\n}" % (self.turnover, rotors_str, self.plugboard, self.reflector)
+
 	def getWindowCharacters(self):
 		result = ""
 		for i in range(len(self.rotors)):
@@ -73,6 +77,9 @@ class Rotor:
 		self.notch = ord(notch) - ord('A')
 		self.window = 0
 
+	def __str__(self):
+		return "{wiring=%s ring=%s}" % (self.wiring, self.ring+1)
+
 	def setWindowCharacter(self, windowCharacter):
 		self.window = ord(windowCharacter) - ord('A')
 
@@ -108,7 +115,9 @@ class Rotor:
 class Reflector:
 	def __init__(self, wiring):
 		self.wiring = wiring
-		pass
+
+	def __str__(self):
+		return str(self.wiring)
 
 	def process(self, input):
 		inputValue = ord(input) - ord('A')
@@ -123,6 +132,9 @@ class Plugboard:
 					continue
 				self.matrix[pair[0]] = pair[1]
 				self.matrix[pair[1]] = pair[0]
+
+	def __str__(self):
+		return str(self.matrix)
 
 	def process(self, input):
 		if input in self.matrix:
