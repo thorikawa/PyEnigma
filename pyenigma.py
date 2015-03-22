@@ -74,7 +74,7 @@ class Rotor:
 	def __init__(self, wiring, ring, notch):
 		self.wiring = wiring
 		self.ring = ord(ring) - ord('A')
-		self.notch = ord(notch) - ord('A')
+		self.notches = [ord(x) - ord('A') for x in notch]
 		self.window = 0
 
 	def __str__(self):
@@ -87,7 +87,7 @@ class Rotor:
 		self.ring = ord(ringCharacter) - ord('A')
 
 	def step(self):
-		turnover = (self.window == self.notch)
+		turnover = (self.window in self.notches)
 		self.window = shift(self.window, 1)
 		return turnover
 
@@ -146,7 +146,10 @@ ROTOR2 = Rotor('AJDKSIRUXBLHWTMCQGZNPYFVOE', 'A', 'E')
 ROTOR3 = Rotor('BDFHJLCPRTXVZNYEIWGAKMUSQO', 'A', 'V')
 ROTOR4 = Rotor('ESOVPZJAYQUIRHXLNFTGKDCMWB', 'A', 'J')
 ROTOR5 = Rotor('VZBRGITYUPSDNHLXAWMJQOFECK', 'A', 'Z')
-ROTORS = [ROTOR1, ROTOR2, ROTOR3, ROTOR4, ROTOR5]
+ROTOR6 = Rotor('JPGVOUMFYQBENHZRDKASXLICTW', 'A', 'MZ')
+ROTOR7 = Rotor('NZJHGRCXMYSWBOUFAIVLPEKQDT', 'A', 'MZ')
+ROTOR8 = Rotor('FKQHTLXOCBJSPDZRAMEWNIUYGV', 'A', 'MZ')
+ROTORS = [ROTOR1, ROTOR2, ROTOR3, ROTOR4, ROTOR5, ROTOR6, ROTOR7, ROTOR8]
 REFLECTOR_A = Reflector('EJMZALYXVBWFCRQUONTSPIKHGD')
 REFLECTOR_B = Reflector('YRUHQSLDPXNGOKMIEBFZCWVJAT')
 REFLECTOR_C = Reflector('FVPJIAOYEDRZXWGCTKUQSBNMHL')
