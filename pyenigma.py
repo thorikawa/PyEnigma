@@ -15,10 +15,9 @@ TODO
 - Support Entry Wheel
 '''
 
-import argparse
-
 class Enigma:
-	def __init__(self, rotors, reflector, plugboard):
+	def __init__(self, rotors, reflector, plugboard, turnover=True):
+		self.turnover = turnover
 		self.rotors = rotors
 		self.reflector = reflector
 		self.plugboard = plugboard
@@ -33,12 +32,19 @@ class Enigma:
 		for i in range(len(self.rotors)):
 			self.rotors[i].setWindowCharacter(windowCharacters[i])
 
+	def setRingSettings(self, ringCharacters):
+		for i in range(len(self.rotors)):
+			self.rotors[i].setRingSetting(ringCharacters[i])
+
 	def step(self):
-		turnover = True
 		index = len(self.rotors) - 1
-		while turnover and index >= 0:
-			turnover = self.rotors[index].step()
-			index = index - 1
+		while True:
+			isTurnover = self.rotors[index].step()
+			if self.turnover and isTurnover and index >= 0:
+				index = index - 1
+				continue
+			else:
+				break
 
 	def encode(self, input, step=True):
 		if len(input) == 1:
@@ -69,6 +75,9 @@ class Rotor:
 
 	def setWindowCharacter(self, windowCharacter):
 		self.window = ord(windowCharacter) - ord('A')
+
+	def setRingSetting(self, ringCharacter):
+		self.ring = ord(ringCharacter) - ord('A')
 
 	def step(self):
 		turnover = (self.window == self.notch)
@@ -120,30 +129,15 @@ class Plugboard:
 			return self.matrix[input]
 		return input
 
-ROTOR1 = Rotor('EKMFLGDQVZNTOWYHXUSPAIBRCJ', 'Z', 'Q')
-ROTOR2 = Rotor('AJDKSIRUXBLHWTMCQGZNPYFVOE', 'Z', 'E')
-ROTOR3 = Rotor('BDFHJLCPRTXVZNYEIWGAKMUSQO', 'Z', 'V')
-REFLECTOR = Reflector('YRUHQSLDPXNGOKMIEBFZCWVJAT')
+ROTOR1 = Rotor('EKMFLGDQVZNTOWYHXUSPAIBRCJ', 'A', 'Q')
+ROTOR2 = Rotor('AJDKSIRUXBLHWTMCQGZNPYFVOE', 'A', 'E')
+ROTOR3 = Rotor('BDFHJLCPRTXVZNYEIWGAKMUSQO', 'A', 'V')
+ROTOR4 = Rotor('ESOVPZJAYQUIRHXLNFTGKDCMWB', 'A', 'J')
+ROTOR5 = Rotor('VZBRGITYUPSDNHLXAWMJQOFECK', 'A', 'Z')
+ROTORS = [ROTOR1, ROTOR2, ROTOR3, ROTOR4, ROTOR5]
+REFLECTOR_A = Reflector('EJMZALYXVBWFCRQUONTSPIKHGD')
+REFLECTOR_B = Reflector('YRUHQSLDPXNGOKMIEBFZCWVJAT')
+REFLECTOR_C = Reflector('FVPJIAOYEDRZXWGCTKUQSBNMHL')
 
 def shift(input, value):
 	return (input + value) % 26
-
-def main():
-	parser = argparse.ArgumentParser(description='Process some integers.')
-	parser.add_argument('-g', '--ground', required=True, help='ground settings')
-	parser.add_argument('-v', '--verbose', action='store_true', help='set if you want to display verbose logs')
-	args = parser.parse_args()
-
-	# rotors = [rotor1, rotor2, rotor3]
-	rotors = [ROTOR1, ROTOR3, ROTOR2]
-	# rotors = [rotor2, rotor3, rotor1]
-	plugboard = Plugboard('IZ ES CY XV AM KR')
-	enigma = Enigma(rotors, REFLECTOR, plugboard)
-	enigma.setWindowCharacters(args.ground)
-
-	while True:
-		input = raw_input()
-		print '%s => %s' % (input, enigma.encode(input))
-
-if __name__ == "__main__":
-	main()

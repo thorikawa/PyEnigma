@@ -8,16 +8,14 @@ class TestFunctions(unittest.TestCase):
 		pass
 
 	def test1(self):
-		rotor1 = pyenigma.Rotor('EKMFLGDQVZNTOWYHXUSPAIBRCJ', 'A', 'Q')
-		rotor2 = pyenigma.Rotor('AJDKSIRUXBLHWTMCQGZNPYFVOE', 'A', 'E')
-		rotor3 = pyenigma.Rotor('BDFHJLCPRTXVZNYEIWGAKMUSQO', 'A', 'V')
-		reflector = pyenigma.Reflector('YRUHQSLDPXNGOKMIEBFZCWVJAT')
 		plugboard = pyenigma.Plugboard('')
-		rotors = [rotor1, rotor2, rotor3]
-		enigma = pyenigma.Enigma(rotors, reflector, plugboard)
+		rotors = [pyenigma.ROTOR1, pyenigma.ROTOR2, pyenigma.ROTOR3]
+		enigma = pyenigma.Enigma(rotors, pyenigma.REFLECTOR_B, plugboard, turnover=True)
 		enigma.setWindowCharacters('AAA')
+		enigma.setRingSettings('AAA')
 		self.failUnlessEqual(enigma.encode('AAAAA'), 'BDZGO')
 		enigma.setWindowCharacters('AAA')
+		enigma.setRingSettings('AAA')
 		self.failUnlessEqual(enigma.encode('BDZGO'), 'AAAAA')
 
 if __name__ == '__main__':
