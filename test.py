@@ -31,5 +31,23 @@ class TestFunctions(unittest.TestCase):
 		enigma.setWindowCharacters('AAA')
 		self.failUnlessEqual(enigma.encode('EWTYX'), 'AAAAA')
 
+	# more practical test case
+	# message from http://wiki.franklinheath.co.uk/index.php/Enigma/Sample_Messages
+	# and http://wiki.franklinheath.co.uk/index.php/Enigma/Sample_Decrypts
+	def test3(self):
+		input = 'GCDSEAHUGWTQGRKVLFGXUCALXVYMIGMMNMFDXTGNVHVRMMEVOUYFZSLRHDRRXFJWCFHUHMUNZEFRDISIKBGPMYVXUZ'
+		output = 'FEINDLIQEINFANTERIEKOLONNEBEOBAQTETXANFANGSUEDAUSGANGBAERWALDEXENDEDREIKMOSTWAERTSNEUSTADT'
+
+		plugboard = pyenigma.Plugboard('AM FI NV PS TU WZ')
+		rotors = [pyenigma.ROTOR2, pyenigma.ROTOR1, pyenigma.ROTOR3]
+		enigma = pyenigma.Enigma(rotors, pyenigma.REFLECTOR_A, plugboard, turnover=True)
+		enigma.setRingSettings('XMV')
+
+		enigma.setWindowCharacters('ABL')
+		self.failUnlessEqual(enigma.encode(input), output)
+
+		enigma.setWindowCharacters('ABL')
+		self.failUnlessEqual(enigma.encode(output), input)
+
 if __name__ == '__main__':
 	unittest.main()
