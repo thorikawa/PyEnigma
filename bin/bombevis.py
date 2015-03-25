@@ -74,6 +74,8 @@ class Bombe:
 	def run(self):
 		while not self.q.empty():
 			st = self.q.get()
+			result = []
+			print '================'
 			# d: d[0] is stickered with d[1] and d[1] to be input for unstickered enigma.
 			for d in [(st[0], st[1]), (st[1], st[0])]:
 				if d in self.visited:
@@ -97,7 +99,8 @@ class Bombe:
 
 					print '%s => %s => %s => %s at %s' % (d[0], d[1], raw_output, t[0], rs)
 
-					yield (raw_output, t[0])
+					result.append((raw_output, t[0]))
+			yield result
 
 	def setRotorSettings(self, rotorSettings):
 		self.rotorSettings = rotorSettings
@@ -232,8 +235,9 @@ class Gui(QtGui.QWidget):
 
 	def step(self):
 		try:
-			pair = self.generator.next()
-			self.check(pair[0], pair[1])
+			newPairs = self.generator.next()
+			for pair in newPairs:
+				self.check(pair[0], pair[1])
 			QtCore.QCoreApplication.processEvents()
 			return True
 		except StopIteration:
