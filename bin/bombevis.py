@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys, Queue, pyenigma, time
+import sys, Queue, pyenigma, time, argparse
 from PyQt4 import QtGui, QtCore
 
 def main():
+
+	parser = argparse.ArgumentParser(description='Process some integers.')
+	parser.add_argument('-g', '--ground', required=True, help='ground settings ex. "FUQ"')
+	parser.add_argument('-v', '--verbose', action='store_true', help='set if you want to display verbose logs')
+	args = parser.parse_args()
 
 	# Example from "From Bombe ‘stops’ to Enigma keys" by Frank Carter
 	# The correct answer is not given
@@ -54,7 +59,7 @@ def main():
 
 	# right answer
 	# rotorSettings = RotorSettings('CBA')
-	rotorSettings = RotorSettings('AAA')
+	rotorSettings = RotorSettings(args.ground)
 
 	bombe = Bombe(menu)
 	app = QtGui.QApplication(sys.argv)
